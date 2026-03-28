@@ -94,5 +94,42 @@ document.getElementById('registrationForm').addEventListener('submit', async (e)
     } else {
         alert("Error: Could not connect to the database.");
     }
-});
+});// Replace these with your actual Supabase details
+const supabaseUrl = 'https://pkol...supabase.co'; 
+const supabaseKey = 'your-anon-key-here';
+
+// This looks for the form ID you just created
+const form = document.getElementById('registrationForm');
+
+if (form) {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // This stops the Formspree error/refresh!
+
+        const formData = new FormData(form);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email')
+        };
+
+        try {
+            const response = await fetch(`${supabaseUrl}/rest/v1/registrations`, {
+                method: 'POST',
+                headers: {
+                    'apikey': supabaseKey,
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Welcome to CodeEl! Data saved successfully.');
+                form.reset();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Something went wrong connecting to the database.');
+        }
+    });
+}
 
