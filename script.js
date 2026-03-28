@@ -64,5 +64,35 @@ document.getElementById('registrationForm').addEventListener('submit', async (e)
 
     const result = await response.json();
     alert("Welcome to CodeEl! We will contact you shortly.");
-}
+}// Use the URL and Key from your Vercel Environment Variables
+const SB_URL = 'https://your-project-id.supabase.co'; 
+const SB_KEY = 'your-anon-key';
+
+document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Stops the page from refreshing or going to Formspree
+
+    const formData = new FormData(e.target);
+    const userInput = {
+        name: formData.get('name'),
+        email: formData.get('email')
+    };
+
+    // This is the actual "Action" that makes it functional
+    const response = await fetch(`${SB_URL}/rest/v1/registrations`, {
+        method: 'POST',
+        headers: {
+            'apikey': SB_KEY,
+            'Authorization': `Bearer ${SB_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userInput)
+    });
+
+    if (response.ok) {
+        alert("Welcome to CodeEl! Your registration was successful.");
+        e.target.reset();
+    } else {
+        alert("Error: Could not connect to the database.");
+    }
+});
 
