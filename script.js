@@ -29,7 +29,36 @@ async function registerClient() {
     // This calls your Python backend we set up earlier
     const response = await fetch('/register', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json'},const supabaseUrl = 'YOUR_SUPABASE_URL'; // Paste your Project URL here
+const supabaseKey = 'YOUR_SUPABASE_KEY'; // Paste your anon public key here
+
+document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+        business_name: formData.get('business_name'), // Make sure these match your HTML "name" attributes
+        email: formData.get('email')
+    };
+
+    const response = await fetch(`${supabaseUrl}/rest/v1/registrations`, {
+        method: 'POST',
+        headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('CodeEl Success! We will contact you shortly.');
+        e.target.reset();
+    } else {
+        alert('Error saving data. Please check your connection.');
+    }
+});
         body: JSON.stringify({ client_name: name, client_email: email })
     });
 
