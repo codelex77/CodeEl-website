@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TESTING - Owner Dashboard - CodeEl</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            code: {
+              900: '#00123a',
+              800: '#001a4d',
+              700: '#003380',
+              600: '#004fa3',
+              500: '#2563eb',
+              400: '#3b82f6',
+              300: '#60a5fa',
+              200: '#93c5fd',
+              100: '#bfdbfe',
+              50: '#0e1626',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .glass {
+      background: rgba(0, 26, 77, 0.95);
+      backdrop-filter: blur(8px);
+    }
+    .fade-in { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .demo-badge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(238, 90, 36, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-[#0a0f1a] text-white antialiased min-h-screen">
+
+  <!-- DEMO MODE BADGE -->
+  <div class="demo-badge">🔧 TESTING MODE - Mock Data Active</div>
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0f1a]">
+    <div class="w-full max-w-md p-8">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-code-800/50 rounded-2xl mb-4">
+          <i data-lucide="layout-dashboard" class="w-8 h-8 text-code-300"></i>
+        </div>
+        <h1 class="text-2xl font-bold mb-2">Owner Dashboard</h1>
+        <p class="text-code-100/60 text-sm">Secure access required</p>
+      </div>
+      
+      <div class="bg-[#0e1626] border border-code-800/40 rounded-2xl p-8 shadow-2xl">
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-code-100 mb-2">Enter Password</label>
+          <input type="password" id="passwordInput" placeholder="Enter password..." 
+            class="w-full bg-[#162035] border border-code-800/50 rounded-lg px-4 py-3 text-white placeholder-code-300/30 focus:border-code-400 focus:outline-none transition-colors"
+            onkeypress="if(event.key==='Enter')checkPassword()" />
+        </div>
+        <button onclick="checkPassword()" class="w-full bg-code-500 hover:bg-code-400 text-white font-semibold py-3 rounded-xl transition-all hover:-translate-y-0.5">
+          Access Dashboard
+        </button>
+        <p id="errorMsg" class="text-red-400 text-sm mt-4 text-center hidden">Incorrect password</p>
+        <a href="index.html" class="block text-center text-code-300/60 text-sm mt-4 hover:text-code-200 transition-colors">← Back to Website</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content (Hidden until login) -->
+  <div id="dashboardContent" class="hidden">
+    <!-- Header -->
+    <header class="glass border-b border-code-800/40 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-8 h-8 bg-code-500 rounded-lg flex items-center justify-center font-bold text-sm">CE</div>
+          <span class="text-code-100/60 text-sm hidden sm:inline">Owner Dashboard</span>
+          <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded border border-yellow-500/30">TEST MODE</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-code-100/60 text-sm hidden md:inline" id="currentDate"></span>
+          <button onclick="logout()" class="flex items-center gap-2 text-code-100 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-[#0e1626] border border-code-800/40 rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-code-800/50 rounded-lg flex items-center justify-center">
+              <i data-lucide="inbox" class="w-6 h-6 text-code-300"></i>
+            </div>
+            <span class="text-code-300 text-xs font-medium bg-code-800/50 px-2 py-1 rounded">Total</span>
+          </div>
+          <div class="text-3xl font-bold mb-1" id="totalInquiries">0</div>
+          <div class="text-code-100/60 text-sm">Inquiries</div>
+        </div>
+
+        <div class="bg-[#0e1626] border border-code-800/40 rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-code-800/50 rounded-lg flex items-center justify-center">
+              <i data-lucide="message-square" class="w-6 h-6 text-code-300"></i>
+            </div>
+            <span class="text-code-300 text-xs font-medium bg-code-800/50 px-2 py-1 rounded">Total</span>
+          </div>
+          <div class="text-3xl font-bold mb-1" id="totalTestimonials">0</div>
+          <div class="text-code-100/60 text-sm">Testimonials</div>
+        </div>
+
+        <div class="bg-[#0e1626] border border-code-800/40 rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-code-800/50 rounded-lg flex items-center justify-center">
+              <i data-lucide="clock" class="w-6 h-6 text-code-300"></i>
+            </div>
+            <span class="text-yellow-400 text-xs font-medium bg-yellow-400/10 px-2 py-1 rounded">Pending</span>
+          </div>
+          <div class="text-3xl font-bold mb-1" id="pendingTestimonials">0</div>
+          <div class="text-code-100/60 text-sm">Awaiting Approval</div>
+        </div>
+
+        <div class="bg-[#0e1626] border border-code-800/40 rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-code-800/50 rounded-lg flex items-center justify-center">
+              <i data-lucide="trending-up" class="w-6 h-6 text-code-300"></i>
+            </div>
+            <span class="text-green-400 text-xs font-medium bg-green-400/10 px-2 py-1 rounded">This Month</span>
+          </div>
+          <div class="text-3xl font-bold mb-1" id="monthlyInquiries">0</div>
+          <div class="text-code-100/60 text-sm">New Inquiries</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex gap-2 mb-6 border-b border-code-800/40 pb-4">
+        <button onclick="showTab('inquiries')" id="tab-inquiries" class="px-6 py-2 rounded-lg font-medium transition-all bg-code-500 text-white">
+          Inquiries
+        </button>
+        <button onclick="showTab('testimonials')" id="tab-testimonials" class="px-6 py-2 rounded-lg font-medium transition-all text-code-100 hover:text-white hover:bg-code-800/50">
+          Testimonials
+        </button>
+        <button onclick="showTab('settings')" id="tab-settings" class="px-6 py-2 rounded-lg font-medium transition-all text-code-100 hover:text-white hover:bg-code-800/50">
+          Settings
+        </button>
+      </div>
+
+      <!-- Inquiries Tab -->
+      <div id="content-inquiries" class="fade-in">
+        <div class="bg-[#0e1626] border border-code-800/40 rounded-xl overflow-hidden">
+          <div class="p-6 border-b border-code-800/40 flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold">Project Inquiries</h2>
+              <p class="text-sm text-code-100/60 mt-1">Showing mock data for testing</p>
+            </div>
+            <button onclick="loadInquiries()" class="text-code-300 hover:text-white transition-colors">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-[#162035] text-code-100 text-sm">
+                <tr>
+                  <th class="px-6 py-4 font-medium">Date</th>
+                  <th class="px-6 py-4 font-medium">Project Type</th>
+                  <th class="px-6 py-4 font-medium">Features</th>
+                  <th class="px-6 py-4 font-medium">Budget (BWP)</th>
+                  <th class="px-6 py-4 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inquiriesTable" class="divide-y divide-code-800/30">
+                <tr>
+                  <td colspan="5" class="px-6 py-8 text-center text-code-200/40">
+                    <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2"></i>
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonials Tab -->
+      <div id="content-testimonials" class="hidden fade-in">
+        <div class="bg-[#0e1626] border border-code-800/40 rounded-xl overflow-hidden">
+          <div class="p-6 border-b border-code-800/40 flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold">Customer Reviews</h2>
+              <p class="text-sm text-code-100/60 mt-1">Approve or delete testimonials</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="loadTestimonials()" class="text-code-300 hover:text-white transition-colors mr-2">
+                <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+              </button>
+              <span class="text-sm text-code-100/60" id="testimonialCount">0 pending</span>
+            </div>
+          </div>
+          <div id="testimonialsList" class="divide-y divide-code-800/30">
+            <div class="px-6 py-8 text-center text-code-200/40">
+              <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2"></i>
+              Loading testimonials...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="content-settings" class="hidden fade-in">
+        <div class="max-w-2xl">
+          <div class="bg-[#0e1626] border border-code-800/40 rounded-xl p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="shield" class="w-5 h-5 text-code-300"></i>
+              Security Settings
+            </h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-3 border-b border-code-800/30">
+                <div>
+                  <div class="font-medium mb-1">Session Timeout</div>
+                  <div class="text-sm text-code-100/60">Automatically logout after 30 minutes</div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked class="sr-only peer">
+                  <div class="w-11 h-6 bg-code-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-code-500"></div>
+                </label>
+              </div>
+              <div class="flex items-center justify-between py-3">
+                <div>
+                  <div class="font-medium mb-1">Password Protection</div>
+                  <div class="text-sm text-code-100/60">Dashboard is password protected</div>
+                </div>
+                <button onclick="changePasswordDemo()" class="text-sm text-code-300 hover:text-white">Change</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-[#0e1626] border border-code-800/40 rounded-xl p-6">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="database" class="w-5 h-5 text-code-300"></i>
+              Data Management
+            </h3>
+            <div class="space-y-3">
+              <button onclick="exportData()" class="w-full flex items-center justify-between p-4 bg-[#162035] hover:bg-code-800/50 rounded-lg transition-colors text-left">
+                <div>
+                  <div class="font-medium">Export All Data</div>
+                  <div class="text-sm text-code-100/60">Download JSON backup</div>
+                </div>
+                <i data-lucide="download" class="w-5 h-5 text-code-300"></i>
+              </button>
+              <button onclick="clearAllData()" class="w-full flex items-center justify-between p-4 bg-red-900/20 hover:bg-red-900/30 border border-red-900/30 rounded-lg transition-colors text-left text-red-300">
+                <div>
+                  <div class="font-medium">Clear All Data</div>
+                  <div class="text-sm text-red-300/60">Delete all inquiries and testimonials</div>
+                </div>
+                <i data-lucide="trash-2" class="w-5 h-5"></i>
+              </button>
+              <button onclick="resetMockData()" class="w-full flex items-center justify-between p-4 bg-green-900/20 hover:bg-green-900/30 border border-green-900/30 rounded-lg transition-colors text-left text-green-300">
+                <div>
+                  <div class="font-medium">Reset Demo Data</div>
+                  <div class="text-sm text-green-300/60">Restore sample data for testing</div>
+                </div>
+                <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const CORRECT_PASSWORD = 'TETHERING';
+    let inquiriesData = [];
+    let testimonialsData = [];
+
+    // localStorage persistence key (shared with index.html)
+    const STORAGE_KEY = 'codeel_data';
+    
+    function getStoredData() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && stored !== 'undefined' && stored !== 'null') {
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === 'object') {
+            return {
+              inquiries: Array.isArray(parsed.inquiries) ? parsed.inquiries : [],
+              testimonials: Array.isArray(parsed.testimonials) ? parsed.testimonials : []
+            };
+          }
+        }
+      } catch (e) {
+        console.error('Error reading localStorage:', e);
+        localStorage.removeItem(STORAGE_KEY); // Clear corrupted data
+      }
+      return { inquiries: [], testimonials: [] };
+    }
+    
+    function saveStoredData(data) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.error('Error saving to localStorage:', e);
+      }
+    }
+
+    // Validate inquiry data to prevent undefined/null display
+    function validateInquiry(inquiry) {
+      return {
+        id: inquiry.id || Date.now(),
+        projectType: inquiry.projectType || 'other',
+        features: inquiry.features || 'No description provided',
+        budget: parseFloat(inquiry.budget) || 0,
+        createdAt: inquiry.createdAt || new Date().toISOString()
+      };
+    }
+
+    // Validate testimonial data
+    function validateTestimonial(t) {
+      return {
+        id: t.id || Date.now(),
+        clientName: t.clientName || 'Anonymous',
+        clientRole: t.clientRole || 'Client',
+        message: t.message || '',
+        rating: parseInt(t.rating) || 5,
+        approved: t.approved === true,
+        createdAt: t.createdAt || new Date().toISOString()
+      };
+    }
+
+    // MOCK DATA GENERATOR - only creates sample data if storage is empty
+    function generateMockData() {
+      const existing = getStoredData();
+      
+      // Only generate mock data if there's nothing in storage
+      if (existing.inquiries.length === 0 && existing.testimonials.length === 0) {
+        const mockInquiries = [
+          {
+            id: 1,
+            projectType: 'web-app',
+            features: 'E-commerce platform with payment integration, user authentication, admin dashboard, and inventory management system.',
+            budget: 25000,
+            createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
+          },
+          {
+            id: 2,
+            projectType: 'mobile-app',
+            features: 'Food delivery app similar to UberEats. Need iOS and Android versions with real-time tracking.',
+            budget: 45000,
+            createdAt: new Date(Date.now() - 86400000 * 5).toISOString()
+          },
+          {
+            id: 3,
+            projectType: 'website',
+            features: 'Corporate website for law firm. About 5 pages, contact form, blog section, and professional design.',
+            budget: 8000,
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 4,
+            projectType: 'custom-software',
+            features: 'School management system with student records, grading, attendance tracking, and parent portal.',
+            budget: 35000,
+            createdAt: new Date(Date.now() - 86400000 * 12).toISOString()
+          }
+        ];
+
+        const mockTestimonials = [
+          {
+            id: 1,
+            clientName: 'John Smith',
+            clientRole: 'CEO, TechStart Ltd',
+            message: 'CodeEl delivered our platform ahead of schedule. The quality of work exceeded our expectations. Highly recommended!',
+            rating: 5,
+            approved: true,
+            createdAt: new Date(Date.now() - 86400000 * 10).toISOString()
+          },
+          {
+            id: 2,
+            clientName: 'Sarah Johnson',
+            clientRole: 'Marketing Director, Acme Corp',
+            message: 'Great communication throughout the project. They understood our vision perfectly and brought it to life.',
+            rating: 5,
+            approved: true,
+            createdAt: new Date(Date.now() - 86400000 * 15).toISOString()
+          },
+          {
+            id: 3,
+            clientName: 'Michael Brown',
+            clientRole: 'Startup Founder',
+            message: 'The mobile app they built for us has amazing reviews from our users. Professional team!',
+            rating: 4,
+            approved: false,
+            createdAt: new Date(Date.now() - 86400000).toISOString()
+          },
+          {
+            id: 4,
+            clientName: 'Emily Davis',
+            clientRole: 'Operations Manager',
+            message: 'Good work but took longer than expected. Final product is solid though.',
+            rating: 4,
+            approved: false,
+            createdAt: new Date(Date.now() - 43200000).toISOString()
+          }
+        ];
+        
+        saveStoredData({ inquiries: mockInquiries, testimonials: mockTestimonials });
+      }
+    }
+
+    // MOCK API INTERCEPTOR with localStorage persistence
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const data = getStoredData();
+          
+          if (url === '/api/inquiries' && (!options || options.method === 'GET' || !options.method)) {
+            // Return all inquiries for dashboard with validation
+            resolve({
+              ok: true,
+              json: () => Promise.resolve(data.inquiries.map(validateInquiry))
+            });
+          } else if (url === '/api/testimonials' && (!options || options.method === 'GET' || !options.method)) {
+            // For dashboard: return all testimonials (approved and pending)
+            resolve({
+              ok: true,
+              json: () => Promise.resolve(data.testimonials.map(validateTestimonial))
+            });
+          } else if (url === '/api/testimonials' && options && options.method === 'POST') {
+            const body = JSON.parse(options.body);
+            const newTestimonial = validateTestimonial({
+              id: Date.now(),
+              ...body,
+              approved: false,
+              createdAt: new Date().toISOString()
+            });
+            data.testimonials.push(newTestimonial);
+            saveStoredData(data);
+            resolve({ ok: true, json: () => Promise.resolve({ success: true, id: newTestimonial.id }) });
+          } else if (url === '/api/inquiries' && options && options.method === 'POST') {
+            const body = JSON.parse(options.body);
+            const newInquiry = validateInquiry({
+              id: Date.now(),
+              ...body,
+              createdAt: new Date().toISOString()
+            });
+            data.inquiries.push(newInquiry);
+            saveStoredData(data);
+            resolve({ ok: true, json: () => Promise.resolve({ success: true, id: newInquiry.id }) });
+          } else if (url.includes('/api/testimonials/') && url.includes('/approve')) {
+            const id = parseInt(url.split('/')[3]);
+            const t = data.testimonials.find(x => x.id === id);
+            if (t) {
+              t.approved = true;
+              saveStoredData(data);
+            }
+            resolve({ ok: true });
+          } else if (options && options.method === 'DELETE') {
+            const parts = url.split('/');
+            const id = parseInt(parts[parts.length - 1]);
+            if (url.includes('inquiries')) {
+              data.inquiries = data.inquiries.filter(x => x.id !== id);
+            } else {
+              data.testimonials = data.testimonials.filter(x => x.id !== id);
+            }
+            saveStoredData(data);
+            resolve({ ok: true });
+          } else {
+            originalFetch(url, options).then(resolve).catch(reject);
+          }
+        }, 300);
+      });
+    };
+
+    // Check if already logged in
+    if (sessionStorage.getItem('dashboardAuth') === 'true') {
+      generateMockData();
+      showDashboard();
+    }
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      if (input === CORRECT_PASSWORD) {
+        sessionStorage.setItem('dashboardAuth', 'true');
+        generateMockData();
+        showDashboard();
+      } else {
+        document.getElementById('errorMsg').classList.remove('hidden');
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('dashboardContent').classList.remove('hidden');
+      lucide.createIcons();
+      updateDate();
+      loadDashboardData();
+    }
+
+    function logout() {
+      sessionStorage.removeItem('dashboardAuth');
+      location.reload();
+    }
+
+    function updateDate() {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', options);
+    }
+
+    function showTab(tabName) {
+      document.getElementById('content-inquiries').classList.add('hidden');
+      document.getElementById('content-testimonials').classList.add('hidden');
+      document.getElementById('content-settings').classList.add('hidden');
+      
+      document.getElementById('tab-inquiries').className = 'px-6 py-2 rounded-lg font-medium transition-all text-code-100 hover:text-white hover:bg-code-800/50';
+      document.getElementById('tab-testimonials').className = 'px-6 py-2 rounded-lg font-medium transition-all text-code-100 hover:text-white hover:bg-code-800/50';
+      document.getElementById('tab-settings').className = 'px-6 py-2 rounded-lg font-medium transition-all text-code-100 hover:text-white hover:bg-code-800/50';
+      
+      document.getElementById('content-' + tabName).classList.remove('hidden');
+      document.getElementById('tab-' + tabName).className = 'px-6 py-2 rounded-lg font-medium transition-all bg-code-500 text-white';
+      
+      lucide.createIcons();
+    }
+
+    async function loadDashboardData() {
+      await loadInquiries();
+      await loadTestimonials();
+      updateStats();
+    }
+
+    async function loadInquiries() {
+      try {
+        const res = await fetch('/api/inquiries');
+        inquiriesData = await res.json();
+        renderInquiries();
+        updateStats();
+      } catch (error) {
+        console.error('Error loading inquiries:', error);
+      }
+    }
+
+    function renderInquiries() {
+      const tbody = document.getElementById('inquiriesTable');
+      if (!inquiriesData || inquiriesData.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-code-200/40">
+              <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+              No inquiries yet
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = inquiriesData.map((inquiry, index) => {
+        // Safely format values
+        const dateStr = inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString() : 'Unknown date';
+        const projectType = inquiry.projectType || 'other';
+        const features = inquiry.features || 'No description';
+        const budget = typeof inquiry.budget === 'number' ? inquiry.budget : (parseFloat(inquiry.budget) || 0);
+        const budgetStr = budget.toLocaleString();
+        const inquiryId = inquiry.id || index;
+        
+        return `
+        <tr class="hover:bg-[#162035]/50 transition-colors">
+          <td class="px-6 py-4 text-sm text-code-100/60">${dateStr}</td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-code-800/50 text-code-200 capitalize">
+              ${projectType.replace(/-/g, ' ')}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-sm max-w-xs truncate" title="${features.replace(/"/g, '&quot;')}">${features}</td>
+          <td class="px-6 py-4 font-medium">P ${budgetStr}</td>
+          <td class="px-6 py-4">
+            <button onclick="viewInquiry(${index})" class="text-code-300 hover:text-white mr-3 p-1 hover:bg-code-800/50 rounded">
+              <i data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+            <button onclick="deleteInquiry(${inquiryId})" class="text-red-400 hover:text-red-300 p-1 hover:bg-red-900/20 rounded">
+              <i data-lucide="trash" class="w-4 h-4"></i>
+            </button>
+          </td>
+        </tr>
+      `}).join('');
+      
+      lucide.createIcons();
+    }
+
+    async function loadTestimonials() {
+      try {
+        const res = await fetch('/api/testimonials');
+        testimonialsData = await res.json();
+        renderTestimonials();
+        updateStats();
+      } catch (error) {
+        console.error('Error loading testimonials:', error);
+      }
+    }
+
+    function renderTestimonials() {
+      const container = document.getElementById('testimonialsList');
+      if (!testimonialsData || !Array.isArray(testimonialsData)) {
+        testimonialsData = [];
+      }
+      
+      const pending = testimonialsData.filter(t => !t.approved).length;
+      document.getElementById('testimonialCount').textContent = `${pending} pending approval`;
+      
+      if (testimonialsData.length === 0) {
+        container.innerHTML = `
+          <div class="px-6 py-8 text-center text-code-200/40">
+            <i data-lucide="message-square" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            No testimonials yet
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = testimonialsData.map(t => {
+        const isApproved = t.approved === true;
+        const clientName = t.clientName || 'Anonymous';
+        const clientRole = t.clientRole || 'Client';
+        const message = t.message || 'No message provided';
+        const rating = parseInt(t.rating) || 5;
+        const dateStr = t.createdAt ? new Date(t.createdAt).toLocaleDateString() : 'Unknown date';
+        const testimonialId = t.id || Date.now();
+        
+        return `
+        <div class="p-6 hover:bg-[#162035]/30 transition-colors ${!isApproved ? 'border-l-4 border-yellow-500' : ''}">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="font-semibold mb-1 flex items-center gap-2">
+                ${clientName}
+                ${!isApproved ? '<span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded">Pending</span>' : ''}
+              </div>
+              <div class="text-sm text-code-100/60">${clientRole}</div>
+            </div>
+            <div class="flex items-center gap-1">
+              ${[1,2,3,4,5].map(i => `
+                <i data-lucide="star" class="w-4 h-4 ${i <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-code-800'}"></i>
+              `).join('')}
+            </div>
+          </div>
+          <p class="text-code-100/80 text-sm mb-4 italic">"${message.replace(/"/g, '&quot;')}"</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-code-100/40">${dateStr}</span>
+            <div class="flex gap-2">
+              ${!isApproved ? `
+                <button onclick="approveTestimonial(${testimonialId})" class="px-3 py-1 bg-green-500/20 text-green-400 text-xs rounded-lg hover:bg-green-500/30 transition-colors flex items-center gap-1">
+                  <i data-lucide="check" class="w-3 h-3"></i> Approve
+                </button>
+              ` : ''}
+              <button onclick="deleteTestimonial(${testimonialId})" class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-1">
+                <i data-lucide="trash" class="w-3 h-3"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `}).join('');
+      
+      lucide.createIcons();
+    }
+
+    function updateStats() {
+      document.getElementById('totalInquiries').textContent = inquiriesData.length;
+      document.getElementById('totalTestimonials').textContent = testimonialsData.length;
+      document.getElementById('pendingTestimonials').textContent = testimonialsData.filter(t => !t.approved).length;
+      
+      const thisMonth = inquiriesData.filter(i => {
+        const date = new Date(i.createdAt);
+        const now = new Date();
+        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+      }).length;
+      document.getElementById('monthlyInquiries').textContent = thisMonth;
+    }
+
+    function viewInquiry(index) {
+      const inquiry = inquiriesData[index] || {};
+      const id = inquiry.id || 'N/A';
+      const type = inquiry.projectType || 'Unknown';
+      const budget = typeof inquiry.budget === 'number' ? inquiry.budget : (parseFloat(inquiry.budget) || 0);
+      const date = inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleString() : 'Unknown';
+      const features = inquiry.features || 'No description provided';
+      
+      alert(`📋 PROJECT INQUIRY #${id}\n\nType: ${type}\nBudget: P ${budget.toLocaleString()}\nDate: ${date}\n\nFeatures:\n${features}`);
+    }
+
+    async function deleteInquiry(id) {
+      if (!confirm('Are you sure you want to delete this inquiry?')) return;
+      try {
+        await fetch(`/api/inquiries/${id}`, { method: 'DELETE' });
+        loadInquiries();
+      } catch (error) {
+        alert('Failed to delete inquiry');
+      }
+    }
+
+    async function approveTestimonial(id) {
+      try {
+        await fetch(`/api/testimonials/${id}/approve`, { method: 'POST' });
+        loadTestimonials();
+      } catch (error) {
+        alert('Failed to approve testimonial');
+      }
+    }
+
+    async function deleteTestimonial(id) {
+      if (!confirm('Are you sure you want to delete this testimonial?')) return;
+      try {
+        await fetch(`/api/testimonials/${id}`, { method: 'DELETE' });
+        loadTestimonials();
+      } catch (error) {
+        alert('Failed to delete testimonial');
+      }
+    }
+
+    function exportData() {
+      const data = {
+        inquiries: inquiriesData,
+        testimonials: testimonialsData,
+        exportedAt: new Date().toISOString(),
+        note: "This is demo data from testing mode"
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `codeel-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      alert('Demo data exported! In production, this would contain real data.');
+    }
+
+    function clearAllData() {
+      if (!confirm('WARNING: This will permanently delete all inquiries and testimonials. Are you sure?')) return;
+      inquiriesData = [];
+      testimonialsData = [];
+      loadDashboardData();
+      alert('All data cleared! (Demo mode)');
+    }
+
+    function resetMockData() {
+      generateMockData();
+      loadDashboardData();
+      alert('Demo data restored with sample inquiries and testimonials!');
+    }
+
+    function changePasswordDemo() {
+      alert('In production, this would allow you to change the password from "TETHERING" to something else.');
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
