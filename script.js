@@ -1,6 +1,6 @@
 // 1. Connection Details (Replace these with your actual Supabase info)
 const SB_URL = 'https://pkolzgjtbotzjhovwtcf.supabase.co'; 
-const SB_KEY = 'your-anon-key-here'; // Paste your secret anon key here
+const SB_KEY = 'your-anon-key-here'; //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrb2x6Z2p0b290c2poYnZ3dGNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NzczMjMsImV4cCI6MjA5MDE1MzMyM30.blJvipdwJDTzfVDcceGFvk6EYWZNJDaxRnhKeM9EgyY 
 
 // 2. The Logic
 const form = document.getElementById('registrationForm');
