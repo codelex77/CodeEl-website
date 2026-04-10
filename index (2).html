@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeEl - Software Solutions</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #0a0f1a;
+      color: white;
+      scroll-behavior: smooth;
+    }
+
+    /* ── NAVBAR ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 26, 77, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(30, 58, 138, 0.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    nav {
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { height: 40px; width: auto; }
+    nav ul { list-style: none; display: flex; align-items: center; gap: 32px; }
+    nav ul a {
+      color: #bfdbfe;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: white; }
+    .nav-cta {
+      background: #2563eb;
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: #3b82f6 !important; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; color: #bfdbfe; }
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px 24px;
+      border-top: 1px solid rgba(30,58,138,0.4);
+      background: rgba(0,26,77,0.98);
+    }
+    .mobile-menu a { color: #bfdbfe; text-decoration: none; font-weight: 500; }
+    .mobile-menu.open { display: flex; }
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .hamburger { display: block; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #001a4d 0%, #003380 40%, #004fa3 70%, #1a6ea8 100%);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.1;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0);
+      background-size: 40px 40px;
+    }
+    .hero-orb1 {
+      position: absolute;
+      top: 25%; left: 25%;
+      width: 288px; height: 288px;
+      background: rgba(59,130,246,0.2);
+      border-radius: 50%;
+      filter: blur(64px);
+    }
+    .hero-orb2 {
+      position: absolute;
+      bottom: 25%; right: 25%;
+      width: 384px; height: 384px;
+      background: rgba(96,165,250,0.1);
+      border-radius: 50%;
+      filter: blur(64px);
+    }
+    .hero-content { position: relative; z-index: 10; max-width: 768px; padding: 0 24px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(96,165,250,0.3);
+      border-radius: 9999px;
+      padding: 8px 16px;
+      font-size: 14px;
+      color: #bfdbfe;
+      margin-bottom: 32px;
+    }
+    .pulse {
+      width: 8px; height: 8px;
+      background: #60a5fa;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    .gradient-text {
+      background: linear-gradient(to right, #93c5fd, #67e8f9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: rgba(191,219,254,0.8);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 10px 30px rgba(30,58,138,0.5);
+    }
+    .btn-primary:hover { background: #60a5fa; transform: translateY(-2px); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+    .scroll-arrow {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(191,219,254,0.5);
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 96px 24px; }
+    .section-title { text-align: center; margin-bottom: 64px; }
+    .section-title h2 { font-size: 2.25rem; font-weight: 700; margin-bottom: 16px; }
+    .section-title p { color: rgba(147,197,253,0.7); font-size: 1.125rem; }
+    .container { max-width: 1152px; margin: 0 auto; }
+
+    /* ── SERVICES ── */
+    #services { background: #0a0f1a; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+    .card {
+      background: #0e1626;
+      border: 1px solid rgba(30,58,138,0.4);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+      cursor: default;
+    }
+    .card:hover {
+      border-color: rgba(37,99,235,0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(30,58,138,0.3);
+    }
+    .card-icon { font-size: 2.5rem; margin-bottom: 20px; }
+    .card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; transition: color 0.2s; }
+    .card:hover h3 { color: #93c5fd; }
+    .card p { color: rgba(147,197,253,0.6); line-height: 1.6; }
+
+    /* ── STATS ── */
+    .stats-section {
+      background: linear-gradient(to bottom, #060c18, #0a0f1a);
+      padding: 80px 24px;
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+    .stat-card {
+      background: rgba(14,22,38,0.8);
+      border: 1px solid rgba(30,58,138,0.3);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .stat-card:hover { border-color: rgba(37,99,235,0.4); }
+    .stat-value { font-size: 1.875rem; font-weight: 900; color: #60a5fa; margin-bottom: 8px; }
+    .stat-label { color: rgba(191,219,254,0.7); font-size: 0.875rem; font-weight: 500; }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials { background: #080d1a; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 64px; }
+    .testimonial-card {
+      background: #0e1626;
+      border: 1px solid rgba(30,58,138,0.4);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color 0.3s;
+    }
+    .testimonial-card:hover { border-color: rgba(37,99,235,0.4); }
+    .stars { display: flex; gap: 4px; }
+    .star { font-size: 18px; }
+    .star.filled { color: #facc15; }
+    .star.empty { color: #1e3a8a; }
+    .testimonial-text { color: rgba(191,219,254,0.8); line-height: 1.6; font-style: italic; flex: 1; }
+    .testimonial-author { border-top: 1px solid rgba(30,58,138,0.3); padding-top: 12px; }
+    .author-name { font-weight: 600; font-size: 0.875rem; }
+    .author-role { color: rgba(96,165,250,0.7); font-size: 0.75rem; margin-top: 2px; }
+    .no-reviews { text-align: center; padding: 64px; color: rgba(147,197,253,0.4); font-size: 1.125rem; }
+
+    /* ── REVIEW FORM ── */
+    .review-form-wrap { max-width: 672px; margin: 0 auto; }
+    .review-form-wrap h3 { text-align: center; font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    .review-form-wrap .sub { text-align: center; color: rgba(147,197,253,0.5); font-size: 0.875rem; margin-bottom: 32px; }
+    .form-box {
+      background: #0e1626;
+      border: 1px solid rgba(30,58,138,0.4);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 0.875rem; font-weight: 600; color: #bfdbfe; margin-bottom: 8px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: #162035;
+      border: 1px solid rgba(30,58,138,0.5);
+      color: white;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(96,165,250,0.3); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: #3b82f6; }
+    .form-group textarea { resize: none; }
+    .star-picker { display: flex; gap: 8px; }
+    .star-btn {
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.1s;
+      color: #1e3a8a;
+    }
+    .star-btn.active { color: #facc15; }
+    .star-btn:hover { transform: scale(1.2); }
+    .btn-submit {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { background: #3b82f6; transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .success-msg { text-align: center; padding: 40px 0; }
+    .success-msg .icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-msg h4 { font-size: 1.25rem; font-weight: 700; color: #4ade80; margin-bottom: 8px; }
+    .success-msg p { color: rgba(147,197,253,0.6); font-size: 0.875rem; }
+
+    /* ── CONTACT ── */
+    #contact { background: #060c18; }
+    .contact-inner { max-width: 672px; margin: 0 auto; }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      background: #25d366;
+      color: white;
+      border-radius: 50px;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(37,211,102,0.4);
+      transition: all 0.25s;
+    }
+    .wa-float:hover {
+      background: #1ebe5a;
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(37,211,102,0.5);
+      border-radius: 50px;
+    }
+    .wa-float svg { width: 22px; height: 22px; flex-shrink: 0; }
+    @media (max-width: 480px) {
+      .wa-float span { display: none; }
+      .wa-float { padding: 16px; border-radius: 50%; }
+    }
+
+    /* ── SOCIAL ── */
+    .social-section { background: #001a4d; padding: 64px 24px; text-align: center; }
+    .social-section h2 { font-size: 1.875rem; font-weight: 700; margin-bottom: 32px; }
+    .social-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 40px; }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .social-link:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    .social-link.wa {
+      background: rgba(37,211,102,0.15);
+      border-color: rgba(37,211,102,0.3);
+      color: #25d366;
+    }
+    .social-link.wa:hover { background: rgba(37,211,102,0.25); }
+    .phone { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .phone a { color: white; font-size: 1.125rem; font-weight: 500; text-decoration: none; transition: color 0.2s; }
+    .phone a:hover { color: #93c5fd; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #00123a;
+      border-top: 1px solid rgba(30,58,138,0.4);
+      padding: 32px 24px;
+      text-align: center;
+    }
+    footer img { height: 32px; width: auto; margin-bottom: 16px; opacity: 0.8; }
+    footer p { color: rgba(147,197,253,0.5); font-size: 0.875rem; }
+    footer a.owner-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: rgba(30,58,138,0.6);
+      font-size: 0.75rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a.owner-link:hover { color: rgba(96,165,250,0.6); }
+  </style>
+</head>
+<body>
+
+  <!-- WHATSAPP FLOAT BUTTON -->
+  <a href="https://wa.me/26778753078?text=Hi%20CodeEl%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" class="wa-float" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    <span>Chat on WhatsApp</span>
+  </a>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav>
+      <img src="/logo.png" alt="CodeEl Logo" class="logo" />
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home" onclick="closeMenu()">Home</a>
+      <a href="#services" onclick="closeMenu()">Services</a>
+      <a href="#testimonials" onclick="closeMenu()">Reviews</a>
+      <a href="#contact" onclick="closeMenu()">Contact</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse"></span>
+        Available for new projects
+      </div>
+      <h1>Building the <span class="gradient-text">Future</span> of Software</h1>
+      <p>Let us bring your vision to life with cutting-edge software solutions tailored for your business.</p>
+      <div class="hero-buttons">
+        <a href="#contact" class="btn-primary">Get Started</a>
+        <a href="#services" class="btn-secondary">Our Services</a>
+      </div>
+    </div>
+    <div class="scroll-arrow">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>What We Build</h2>
+        <p>From concept to deployment, we deliver software that drives results.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">🌐</div><h3>Web Applications</h3><p>Modern, responsive websites and web apps built with the latest technologies. Fast, secure, and scalable.</p></div>
+        <div class="card"><div class="card-icon">📱</div><h3>Mobile Apps</h3><p>Native and cross-platform mobile apps for iOS and Android. Intuitive UX that users love.</p></div>
+        <div class="card"><div class="card-icon">⚙️</div><h3>Custom Software</h3><p>Bespoke software solutions tailored to your business needs. Automate, integrate, and innovate.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Why Choose CodeEl?</h2>
+        <p>We are committed to delivering excellence.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value">100%</div><div class="stat-label">Client Satisfaction</div></div>
+        <div class="stat-card"><div class="stat-value">Fast</div><div class="stat-label">Delivery Turnaround</div></div>
+        <div class="stat-card"><div class="stat-value">24/7</div><div class="stat-label">Support Available</div></div>
+        <div class="stat-card"><div class="stat-value">Modern</div><div class="stat-label">Tech Stack</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="section-title">
+        <h2>What Our Clients Say</h2>
+        <p>Real feedback from real clients.</p>
+      </div>
+      <div id="testimonialsGrid"></div>
+
+      <!-- Leave a Review -->
+      <div class="review-form-wrap">
+        <h3>Leave a Review</h3>
+        <p class="sub">Worked with us? We'd love your feedback.</p>
+        <div class="form-box">
+          <div id="reviewSuccess" class="success-msg" style="display:none">
+            <div class="icon">🙏</div>
+            <h4>Thank you!</h4>
+            <p>Your review has been submitted and is awaiting approval.</p>
+          </div>
+          <form id="reviewForm" onsubmit="submitReview(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="rName" placeholder="John Doe" required minlength="2" />
+              </div>
+              <div class="form-group">
+                <label>Your Role / Company</label>
+                <input type="text" id="rRole" placeholder="CEO, Acme Ltd" required minlength="2" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Your Review</label>
+              <textarea id="rMessage" rows="4" placeholder="Tell us about your experience..." required minlength="10"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Rating</label>
+              <div class="star-picker" id="starPicker"></div>
+            </div>
+            <button type="submit" class="btn-submit" id="reviewBtn">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="section-title">
+        <h2>Tell Us About Your Project</h2>
+        <p>Fill out the form and we'll get back to you shortly.</p>
+      </div>
+      <div class="form-box">
+        <div id="inquirySuccess" class="success-msg" style="display:none">
+          <div class="icon">✅</div>
+          <h4>Submitted!</h4>
+          <p>Thanks! We'll be in touch soon.</p>
+        </div>
+        <form id="inquiryForm" onsubmit="submitInquiry(event)">
+          <div class="form-group">
+            <label>What kind of project?</label>
+            <select id="iType">
+              <option value="website">Website</option>
+              <option value="web-app">Web Application</option>
+              <option value="mobile-app">Mobile App</option>
+              <option value="custom-software">Custom Software</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>What features do you want?</label>
+            <textarea id="iFeatures" rows="5" placeholder="Tell us your ideas..." required minlength="5"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Estimated budget (BWP)</label>
+            <input type="number" id="iBudget" placeholder="Enter your budget" required min="0" />
+          </div>
+          <button type="submit" class="btn-submit" id="inquiryBtn">Submit Inquiry</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <div class="social-section">
+    <div class="container">
+      <h2>Connect With Us</h2>
+      <div class="social-links">
+        <a href="https://facebook.com/CodeEl" target="_blank" class="social-link">📘 Facebook</a>
+        <a href="https://instagram.com/CodeEl" target="_blank" class="social-link">📸 Instagram</a>
+        <a href="https://tiktok.com/@CodeEl" target="_blank" class="social-link">🎵 TikTok</a>
+        <a href="https://wa.me/26778753078?text=Hi%20CodeEl%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" class="social-link wa">💬 WhatsApp</a>
+      </div>
+      <div class="phone">
+        <span>📞</span>
+        <a href="tel:+26778753078">+267 78753078</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="/logo.png" alt="CodeEl Logo" />
+    <p>&copy; 2026 CodeEl Software Solutions. All rights reserved.</p>
+    <a href="/admin" class="owner-link">Owner Dashboard</a>
+  </footer>
+
+  <script>
+    // ── MOBILE MENU ──
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+    }
+
+    // ── STAR PICKER ──
+    let selectedRating = 5;
+    const starPicker = document.getElementById('starPicker');
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'star-btn' + (i <= 5 ? ' active' : '');
+      btn.textContent = '★';
+      btn.dataset.star = i;
+      btn.onclick = () => {
+        selectedRating = i;
+        document.querySelectorAll('.star-btn').forEach((b, idx) => {
+          b.classList.toggle('active', idx < i);
+        });
+      };
+      starPicker.appendChild(btn);
+    }
+
+    // ── LOAD TESTIMONIALS ──
+    async function loadTestimonials() {
+      const grid = document.getElementById('testimonialsGrid');
+      try {
+        const res = await fetch('/api/testimonials');
+        const data = await res.json();
+        if (!data.length) {
+          grid.innerHTML = '<div class="no-reviews">No reviews yet — be the first to leave one below!</div>';
+          return;
+        }
+        grid.innerHTML = '<div class="testimonials-grid">' +
+          data.map(t => `
+            <div class="testimonial-card">
+              <div class="stars">
+                ${[1,2,3,4,5].map(i => `<span class="star ${i <= t.rating ? 'filled' : 'empty'}">★</span>`).join('')}
+              </div>
+              <p class="testimonial-text">"${t.client_name ? escHtml(t.message) : ''}"</p>
+              <div class="testimonial-author">
+                <div class="author-name">${escHtml(t.client_name)}</div>
+                <div class="author-role">${escHtml(t.client_role || '')}</div>
+              </div>
+            </div>
+          `).join('') +
+        '</div>';
+      } catch {
+        grid.innerHTML = '<div class="no-reviews">Could not load reviews.</div>';
+      }
+    }
+    loadTestimonials();
+
+    function escHtml(str) {
+      return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── SUBMIT REVIEW ──
+    async function submitReview(e) {
+      e.preventDefault();
+      const btn = document.getElementById('reviewBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+      try {
+        await fetch('/api/testimonials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            clientName: document.getElementById('rName').value,
+            clientRole: document.getElementById('rRole').value,
+            message: document.getElementById('rMessage').value,
+            rating: selectedRating
+          })
+        });
+        document.getElementById('reviewForm').style.display = 'none';
+        document.getElementById('reviewSuccess').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('reviewSuccess').style.display = 'none';
+          document.getElementById('reviewForm').style.display = 'block';
+          document.getElementById('reviewForm').reset();
+          btn.disabled = false;
+          btn.textContent = 'Submit Review';
+        }, 6000);
+      } catch {
+        alert('Failed to submit. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Submit Review';
+      }
+    }
+
+    // ── SUBMIT INQUIRY ──
+    async function submitInquiry(e) {
+      e.preventDefault();
+      const btn = document.getElementById('inquiryBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+      try {
+        await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            projectType: document.getElementById('iType').value,
+            features: document.getElementById('iFeatures').value,
+            budget: parseFloat(document.getElementById('iBudget').value) || 0
+          })
+        });
+        document.getElementById('inquiryForm').style.display = 'none';
+        document.getElementById('inquirySuccess').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('inquirySuccess').style.display = 'none';
+          document.getElementById('inquiryForm').style.display = 'block';
+          document.getElementById('inquiryForm').reset();
+          btn.disabled = false;
+          btn.textContent = 'Submit Inquiry';
+        }, 5000);
+      } catch {
+        alert('Failed to submit. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Submit Inquiry';
+      }
+    }
+  </script>
+</body>
+</html>
