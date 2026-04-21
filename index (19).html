@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeEl – Software Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#040810; --bg2:#070d1a; --bg3:#0b1426; --surface:#0f1d35;
+      --border:rgba(37,99,235,0.18); --blue:#2563eb; --blue-lt:#3b82f6;
+      --cyan:#06b6d4; --silver:#94a3b8; --white:#f0f6ff;
+      --muted:rgba(148,163,184,0.6); --green:#22c55e; --gold:#f59e0b;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;}
+    img{display:block;max-width:100%;}
+    a{text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--blue);border-radius:3px;}
+
+    /* NAV */
+    header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(4,8,16,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    nav{max-width:1200px;margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-logo{height:38px;width:auto;}
+    .nav-links{display:flex;align-items:center;gap:36px;list-style:none;}
+    .nav-links a{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--silver);transition:color .2s;}
+    .nav-links a:hover{color:var(--white);}
+    .nav-cta{background:var(--blue);color:var(--white)!important;padding:9px 22px;border-radius:8px;transition:background .2s,transform .2s!important;}
+    .nav-cta:hover{background:var(--blue-lt)!important;transform:translateY(-1px);}
+    .ham{display:none;background:none;border:none;cursor:pointer;color:var(--silver);}
+    .mob-menu{display:none;flex-direction:column;gap:20px;padding:20px 28px;border-top:1px solid var(--border);background:rgba(4,8,16,0.97);}
+    .mob-menu a{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--silver);letter-spacing:.05em;text-transform:uppercase;}
+    .mob-menu.open{display:flex;}
+    @media(max-width:768px){.nav-links{display:none;}.ham{display:block;}}
+
+    /* HERO */
+    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding-top:68px;}
+    .hero-canvas{position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(37,99,235,0.28) 0%,transparent 70%),radial-gradient(ellipse 40% 35% at 85% 85%,rgba(6,182,212,0.1) 0%,transparent 60%),linear-gradient(180deg,#040d1f 0%,#040810 100%);}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(37,99,235,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,0.06) 1px,transparent 1px);background-size:64px 64px;animation:gridMove 25s linear infinite;}
+    @keyframes gridMove{0%{transform:translateY(0)}100%{transform:translateY(64px)}}
+    .hero-content{position:relative;z-index:10;max-width:840px;padding:0 24px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:100px;padding:7px 18px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#93c5fd;margin-bottom:28px;animation:fadeUp .8s ease both;}
+    .bdot{width:7px;height:7px;background:#22c55e;border-radius:50%;box-shadow:0 0 8px #22c55e;animation:blink 2s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,7vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:24px;animation:fadeUp .8s .15s ease both;}
+    .hero h1 em{font-style:normal;background:linear-gradient(135deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero-sub{font-size:clamp(1rem,2.2vw,1.2rem);color:var(--muted);line-height:1.75;max-width:560px;margin:0 auto 40px;animation:fadeUp .8s .3s ease both;}
+    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .45s ease both;}
+    .btn-hp{background:var(--blue);color:#fff;padding:15px 34px;border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:.03em;transition:all .25s;box-shadow:0 8px 32px rgba(37,99,235,0.4);}
+    .btn-hp:hover{background:var(--blue-lt);transform:translateY(-2px);box-shadow:0 12px 40px rgba(37,99,235,0.5);}
+    .btn-hg{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:15px 34px;border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;transition:all .25s;}
+    .btn-hg:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
+
+    /* hero images */
+    .hero-imgs{position:relative;z-index:10;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:60px;padding:0 24px;animation:fadeUp .8s .6s ease both;}
+    .hi-card{width:210px;height:135px;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.55);flex-shrink:0;}
+    .hi-card img{width:100%;height:100%;object-fit:cover;}
+    .scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:rgba(148,163,184,0.35);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;animation:bob 2.5s infinite;}
+    @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+    /* STATS */
+    .stats-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px;}
+    .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:28px;}
+    .stat{text-align:center;}
+    .stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+    .stat-lbl{font-size:.75rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+
+    /* COMMONS */
+    section{padding:100px 24px;}
+    .container{max-width:1200px;margin:0 auto;}
+    .sec-label{display:inline-flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-lt);margin-bottom:14px;}
+    .sec-label::before{content:'';width:22px;height:2px;background:var(--blue-lt);}
+    .sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.7rem);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin-bottom:14px;}
+    .sec-sub{color:var(--muted);font-size:1rem;line-height:1.75;max-width:500px;}
+    .sec-head{margin-bottom:52px;}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.in{opacity:1;transform:none;}
+
+    /* PACKAGES */
+    #services{background:var(--bg2);}
+    .pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:24px;}
+    .pkg-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 30px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s;}
+    .pkg-card:hover{transform:translateY(-6px);border-color:rgba(37,99,235,0.5);box-shadow:0 32px 64px rgba(37,99,235,0.14);}
+    .pkg-card.hot{border-color:rgba(37,99,235,0.5);background:linear-gradient(145deg,#0f1d35,#0a1628);}
+    .pkg-card.hot::before{content:'MOST POPULAR';position:absolute;top:18px;right:-30px;background:var(--blue);color:#fff;font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:.1em;padding:5px 38px;transform:rotate(45deg);}
+    .pkg-glow{position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(37,99,235,0.1) 0%,transparent 70%);pointer-events:none;}
+    .pkg-icon{width:50px;height:50px;border-radius:12px;background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px;}
+    .pkg-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--blue-lt);margin-bottom:4px;}
+    .pkg-tag{font-size:.85rem;color:var(--muted);margin-bottom:18px;line-height:1.5;}
+    .pkg-pricing{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+    .pp{background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.18);border-radius:8px;padding:8px 12px;}
+    .pp-lbl{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+    .pp-val{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--white);}
+    .pkg-feats{list-style:none;margin-bottom:26px;display:flex;flex-direction:column;gap:9px;}
+    .pkg-feats li{display:flex;align-items:flex-start;gap:9px;font-size:.86rem;color:rgba(240,246,255,0.72);line-height:1.5;}
+    .pkg-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px;}
+    .pkg-btn{display:block;width:100%;text-align:center;background:var(--blue);color:#fff;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;transition:all .2s;}
+    .pkg-btn:hover{background:var(--blue-lt);transform:translateY(-1px);}
+    .pkg-card.hot .pkg-btn{background:linear-gradient(135deg,var(--blue),var(--cyan));}
+
+    /* ADDONS */
+    .addons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:48px;}
+    .addon{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:24px 20px;transition:border-color .25s,transform .25s;}
+    .addon:hover{border-color:rgba(37,99,235,0.4);transform:translateY(-3px);}
+    .addon-icon{font-size:1.8rem;margin-bottom:10px;}
+    .addon-name{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:5px;}
+    .addon-price{font-size:.78rem;color:var(--cyan);font-weight:600;margin-bottom:7px;}
+    .addon-desc{font-size:.8rem;color:var(--muted);line-height:1.55;}
+
+    /* WHY */
+    #why{background:var(--bg);}
+    .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+    @media(max-width:768px){.why-grid{grid-template-columns:1fr;gap:40px;}}
+    .why-img-wrap{position:relative;}
+    .why-main{width:100%;height:400px;object-fit:cover;border-radius:20px;border:1px solid var(--border);box-shadow:0 40px 80px rgba(0,0,0,0.5);}
+    .why-accent{position:absolute;bottom:-22px;right:-22px;width:170px;height:120px;object-fit:cover;border-radius:12px;border:3px solid var(--bg);box-shadow:0 16px 40px rgba(0,0,0,0.5);}
+    .why-badge{position:absolute;top:22px;left:-18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:0 12px 32px rgba(0,0,0,0.4);}
+    .wb-num{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--blue-lt);}
+    .wb-lbl{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+    .why-pts{display:flex;flex-direction:column;gap:22px;margin-top:32px;}
+    .why-pt{display:flex;gap:14px;align-items:flex-start;}
+    .wp-ic{width:42px;height:42px;flex-shrink:0;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+    .wp-t{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:3px;}
+    .wp-d{font-size:.83rem;color:var(--muted);line-height:1.6;}
+
+    /* WORK */
+    #work{background:var(--bg2);}
+    .work-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:22px;}
+    .work-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--surface);transition:transform .3s,box-shadow .3s;}
+    .work-card:hover{transform:translateY(-5px);box-shadow:0 24px 56px rgba(0,0,0,0.4);}
+    .work-img{width:100%;height:195px;object-fit:cover;}
+    .work-body{padding:20px 22px;}
+    .work-tag{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--cyan);margin-bottom:7px;}
+    .work-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:7px;}
+    .work-desc{font-size:.83rem;color:var(--muted);line-height:1.6;}
+
+    /* TESTIMONIALS */
+    #testimonials{background:var(--bg);}
+    .test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;margin-bottom:60px;}
+    .test-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:14px;transition:border-color .25s;}
+    .test-card:hover{border-color:rgba(37,99,235,0.4);}
+    .t-stars{display:flex;gap:3px;}
+    .sf{color:#f59e0b;font-size:14px;}
+    .se{color:#1e3a8a;font-size:14px;}
+    .t-quote{font-size:.88rem;color:rgba(240,246,255,0.72);line-height:1.7;font-style:italic;flex:1;}
+    .t-author{border-top:1px solid var(--border);padding-top:12px;}
+    .t-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
+    .t-role{font-size:.73rem;color:var(--cyan);margin-top:2px;}
+    .no-rev{text-align:center;padding:56px;color:var(--muted);}
+
+    /* FORMS */
+    .rev-wrap{max-width:620px;margin:0 auto;}
+    .fs-title{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;text-align:center;margin-bottom:6px;}
+    .fs-sub{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:28px;}
+    .form-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:34px;box-shadow:0 32px 64px rgba(0,0,0,0.4);}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+    @media(max-width:580px){.frow{grid-template-columns:1fr;}}
+    .fg{margin-bottom:18px;}
+    .fg label{display:block;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#93c5fd;margin-bottom:7px;}
+    .fg input,.fg select,.fg textarea{width:100%;background:#0a1628;border:1px solid rgba(37,99,235,0.28);color:var(--white);border-radius:9px;padding:11px 14px;font-size:.88rem;outline:none;transition:border-color .2s;font-family:'DM Sans',sans-serif;}
+    .fg input::placeholder,.fg textarea::placeholder{color:rgba(148,163,184,0.3);}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue-lt);}
+    .fg select option{background:#0a1628;}
+    .fg textarea{resize:none;}
+    .sp-row{display:flex;gap:7px;}
+    .sp-btn{font-size:1.85rem;background:none;border:none;cursor:pointer;color:#1e3a8a;transition:transform .15s;}
+    .sp-btn.on{color:#f59e0b;}
+    .sp-btn:hover{transform:scale(1.2);}
+    .btn-sub{width:100%;background:var(--blue);color:#fff;border:none;padding:13px;border-radius:11px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .2s;margin-top:6px;}
+    .btn-sub:hover{background:var(--blue-lt);transform:translateY(-1px);}
+    .btn-sub:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+    .suc{text-align:center;padding:44px 0;}
+    .suc .si{font-size:2.8rem;margin-bottom:14px;}
+    .suc h4{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:var(--green);margin-bottom:7px;}
+    .suc p{font-size:.85rem;color:var(--muted);}
+
+    /* CONTACT */
+    #contact{background:var(--bg2);}
+    .contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:start;}
+    @media(max-width:860px){.contact-grid{grid-template-columns:1fr;}}
+    .ci-list{display:flex;flex-direction:column;gap:24px;}
+    .ci-item{display:flex;gap:14px;align-items:flex-start;}
+    .ci-ic{width:44px;height:44px;flex-shrink:0;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+    .ci-lbl{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    .ci-val{font-family:'Syne',sans-serif;font-weight:600;font-size:.92rem;}
+    .ci-val a{color:var(--white);transition:color .2s;}
+    .ci-val a:hover{color:var(--blue-lt);}
+
+    /* SOCIAL */
+    .soc-strip{background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:52px 24px;text-align:center;}
+    .soc-strip h3{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:26px;}
+    .soc-links{display:flex;flex-wrap:wrap;justify-content:center;gap:11px;margin-bottom:28px;}
+    .soc-a{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--silver);padding:10px 20px;border-radius:9px;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;transition:all .2s;}
+    .soc-a:hover{background:rgba(255,255,255,0.1);color:var(--white);transform:translateY(-2px);}
+    .soc-a.wa{background:rgba(37,211,102,0.07);border-color:rgba(37,211,102,0.18);color:#25d366;}
+    .soc-a.wa:hover{background:rgba(37,211,102,0.14);}
+    .ph-row{display:flex;align-items:center;justify-content:center;gap:9px;color:var(--muted);}
+    .ph-row a{color:var(--white);font-weight:600;transition:color .2s;}
+    .ph-row a:hover{color:var(--blue-lt);}
+
+    /* FOOTER */
+    footer{background:var(--bg);border-top:1px solid var(--border);padding:30px 24px;text-align:center;}
+    footer img{height:28px;width:auto;margin:0 auto 14px;opacity:.7;}
+    footer p{font-size:.78rem;color:var(--muted);}
+    .owner-link{display:inline-block;margin-top:10px;font-size:.7rem;color:rgba(37,99,235,0.28);transition:color .2s;}
+    .owner-link:hover{color:rgba(59,130,246,0.55);}
+
+    /* WA FLOAT */
+    .wa-float{position:fixed;bottom:26px;right:26px;z-index:999;background:#25d366;color:#fff;border-radius:50px;padding:12px 20px;display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 8px 32px rgba(37,211,102,0.4);transition:all .25s;}
+    .wa-float:hover{background:#1ebe5a;transform:translateY(-3px);box-shadow:0 14px 40px rgba(37,211,102,0.5);}
+    .wa-float svg{width:19px;height:19px;}
+    @media(max-width:480px){.wa-float span{display:none;}.wa-float{padding:14px;border-radius:50%;}}
+  </style>
+</head>
+<body>
+
+  <!-- WA FLOAT -->
+  <a href="https://wa.me/26778753078?text=Hi%20CodeEl%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" class="wa-float">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span>Chat on WhatsApp</span>
+  </a>
+
+  <!-- NAV -->
+  <header>
+    <nav>
+      <img src="/logo.png" alt="CodeEl" class="nav-logo" />
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#work">Our Work</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+      </ul>
+      <button class="ham" onclick="toggleNav()">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </nav>
+    <div class="mob-menu" id="mobMenu">
+      <a href="#services" onclick="closeNav()">Services</a>
+      <a href="#why" onclick="closeNav()">Why Us</a>
+      <a href="#work" onclick="closeNav()">Our Work</a>
+      <a href="#testimonials" onclick="closeNav()">Reviews</a>
+      <a href="#contact" onclick="closeNav()">Get a Quote</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-canvas"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="bdot"></span>Available for new projects in Botswana</div>
+      <h1>We Build <em>Software</em><br>That Grows Your<br>Business</h1>
+      <p class="hero-sub">From a clean online presence to a full business engine — CodeEl delivers websites, apps, and automation tailored for Botswana businesses.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-hp">Get a Free Quote</a>
+        <a href="#services" class="btn-hg">See Our Packages</a>
+      </div>
+    </div>
+    <div class="hero-imgs">
+      <div class="hi-card"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=440&q=80" alt="Web" loading="lazy" /></div>
+      <div class="hi-card"><img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=440&q=80" alt="Mobile" loading="lazy" /></div>
+      <div class="hi-card"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=440&q=80" alt="Team" loading="lazy" /></div>
+    </div>
+    <div class="scroll-hint">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      Scroll
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat reveal"><div class="stat-num">100%</div><div class="stat-lbl">Client Satisfaction</div></div>
+      <div class="stat reveal"><div class="stat-num">3</div><div class="stat-lbl">Packages</div></div>
+      <div class="stat reveal"><div class="stat-num">24/7</div><div class="stat-lbl">Support</div></div>
+      <div class="stat reveal"><div class="stat-num">BWP</div><div class="stat-lbl">Local Pricing</div></div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div class="sec-label">Packages</div>
+        <h2 class="sec-title">Choose Your Growth Level</h2>
+        <p class="sec-sub">Every business is different. Pick the package that fits where you are — and where you're going.</p>
+      </div>
+      <div class="pkg-grid">
+        <div class="pkg-card reveal">
+          <div class="pkg-glow"></div>
+          <div class="pkg-icon">🌐</div>
+          <div class="pkg-name">Starter Package</div>
+          <div class="pkg-tag">Online Presence — A clean, professional entry online for any business.</div>
+          <div class="pkg-pricing">
+            <div class="pp"><div class="pp-lbl">Setup</div><div class="pp-val">P3,375 – P6,725</div></div>
+            <div class="pp"><div class="pp-lbl">Monthly</div><div class="pp-val">P405 – P550</div></div>
+          </div>
+          <ul class="pkg-feats">
+            <li>1–3 page website</li>
+            <li>Mobile-optimized design</li>
+            <li>WhatsApp integration</li>
+            <li>Basic SEO setup</li>
+          </ul>
+          <a href="#contact" class="pkg-btn">Get Started →</a>
+        </div>
+        <div class="pkg-card hot reveal">
+          <div class="pkg-glow"></div>
+          <div class="pkg-icon">🚀</div>
+          <div class="pkg-name">Growth Package</div>
+          <div class="pkg-tag">Customer Generator — Actively brings in and manages customers.</div>
+          <div class="pkg-pricing">
+            <div class="pp"><div class="pp-lbl">Setup</div><div class="pp-val">P6,750 – P10,800</div></div>
+            <div class="pp"><div class="pp-lbl">Monthly</div><div class="pp-val">P405 – P675</div></div>
+          </div>
+          <ul class="pkg-feats">
+            <li>5–8 page full website</li>
+            <li>Booking / Reservation system</li>
+            <li>Google Maps integration</li>
+            <li>Basic automation</li>
+          </ul>
+          <a href="#contact" class="pkg-btn">Get Started →</a>
+        </div>
+        <div class="pkg-card reveal">
+          <div class="pkg-glow"></div>
+          <div class="pkg-icon">⚡</div>
+          <div class="pkg-name">Premium Package</div>
+          <div class="pkg-tag">Business Engine — A complete system that runs and grows your business.</div>
+          <div class="pkg-pricing">
+            <div class="pp"><div class="pp-lbl">Setup</div><div class="pp-val">P12,150 – P20,250</div></div>
+            <div class="pp"><div class="pp-lbl">Monthly</div><div class="pp-val">P675 – P1,350</div></div>
+          </div>
+          <ul class="pkg-feats">
+            <li>Advanced website system</li>
+            <li>Booking + automation</li>
+            <li>AI chatbot</li>
+            <li>Funnels &amp; landing pages</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="#contact" class="pkg-btn">Get Started →</a>
+        </div>
+      </div>
+
+      <!-- addons -->
+      <div class="reveal" style="margin-top:52px;">
+        <div class="sec-label">Add-ons</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;margin-bottom:22px;">Additional Services</h3>
+      </div>
+      <div class="addons-grid reveal">
+        <div class="addon"><div class="addon-icon">📅</div><div class="addon-name">Booking Systems</div><div class="addon-price">P2,025 – P9,450</div><div class="addon-desc">Online booking for any business type.</div></div>
+        <div class="addon"><div class="addon-icon">🤖</div><div class="addon-name">AI Automation</div><div class="addon-price">Setup P2,700–P6,750 · Monthly P270–P1,350</div><div class="addon-desc">Automate responses and repetitive tasks.</div></div>
+        <div class="addon"><div class="addon-icon">📣</div><div class="addon-name">Marketing Funnels</div><div class="addon-price">P1,350 – P4,050</div><div class="addon-desc">Landing pages that convert visitors to customers.</div></div>
+        <div class="addon"><div class="addon-icon">🛠</div><div class="addon-name">Maintenance &amp; Hosting</div><div class="addon-price">P135 – P1,350 / month</div><div class="addon-desc">Ongoing support and reliable hosting.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section id="why">
+    <div class="container">
+      <div class="why-grid">
+        <div class="why-img-wrap reveal">
+          <img class="why-main" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=700&q=80" alt="Developer" loading="lazy" />
+          <img class="why-accent" src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=360&q=80" alt="Mobile" loading="lazy" />
+          <div class="why-badge"><div class="wb-num">100%</div><div class="wb-lbl">Local &amp; Reliable</div></div>
+        </div>
+        <div class="reveal">
+          <div class="sec-label">Why CodeEl</div>
+          <h2 class="sec-title">Built for Botswana Businesses</h2>
+          <p class="sec-sub">We understand the local market. We speak your language, we know your customers, and we price in Pula.</p>
+          <div class="why-pts">
+            <div class="why-pt"><div class="wp-ic">⚡</div><div><div class="wp-t">Fast Delivery</div><div class="wp-d">Most projects launched in 1–3 weeks. No long waits.</div></div></div>
+            <div class="why-pt"><div class="wp-ic">💰</div><div><div class="wp-t">Transparent Pricing</div><div class="wp-d">Clear packages in BWP — no hidden fees, no surprises.</div></div></div>
+            <div class="why-pt"><div class="wp-ic">📱</div><div><div class="wp-t">Mobile-First Always</div><div class="wp-d">Every site looks perfect on any phone or screen.</div></div></div>
+            <div class="why-pt"><div class="wp-ic">🤝</div><div><div class="wp-t">Ongoing Support</div><div class="wp-d">We're your long-term tech partner, not just a one-time job.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR WORK -->
+  <section id="work">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div class="sec-label">Portfolio</div>
+        <h2 class="sec-title">Recent Projects</h2>
+        <p class="sec-sub">Real work for real Botswana businesses.</p>
+      </div>
+      <div class="work-grid">
+        <div class="work-card reveal">
+          <img class="work-img" src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80" alt="Tshipi Works" loading="lazy" />
+          <div class="work-body"><div class="work-tag">Metal Fabrication · Gabane</div><div class="work-title">Tshipi Works</div><div class="work-desc">Full website with lead capture, admin dashboard, and real-time inquiry notifications.</div></div>
+        </div>
+        <div class="work-card reveal">
+          <img class="work-img" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80" alt="Narita Motors" loading="lazy" />
+          <div class="work-body"><div class="work-tag">Car Dealership · Gaborone</div><div class="work-title">Narita Motors</div><div class="work-desc">Dealership platform with inventory browser, AI chat assistant, and admin dashboard.</div></div>
+        </div>
+        <div class="work-card reveal">
+          <img class="work-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80" alt="Your business" loading="lazy" />
+          <div class="work-body"><div class="work-tag">Your Business Here</div><div class="work-title">Next Project</div><div class="work-desc">Ready to be the next CodeEl success story? Let's build something great.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div class="sec-label">Reviews</div>
+        <h2 class="sec-title">What Our Clients Say</h2>
+        <p class="sec-sub">Real feedback from real Botswana businesses.</p>
+      </div>
+      <div id="testimonialsGrid"></div>
+      <div class="rev-wrap reveal">
+        <h3 class="fs-title">Leave a Review</h3>
+        <p class="fs-sub">Worked with us? We'd love to hear from you.</p>
+        <div class="form-box">
+          <div id="revSuccess" class="suc" style="display:none"><div class="si">🙏</div><h4>Thank you!</h4><p>Your review is awaiting approval.</p></div>
+          <form id="revForm" onsubmit="submitReview(event)">
+            <div class="frow">
+              <div class="fg"><label>Your Name</label><input type="text" id="rName" placeholder="John Doe" required minlength="2" /></div>
+              <div class="fg"><label>Role / Company</label><input type="text" id="rRole" placeholder="CEO, Acme Ltd" required minlength="2" /></div>
+            </div>
+            <div class="fg"><label>Your Review</label><textarea id="rMsg" rows="4" placeholder="Tell us about your experience..." required minlength="10"></textarea></div>
+            <div class="fg"><label>Rating</label><div class="sp-row" id="starPicker"></div></div>
+            <button type="submit" class="btn-sub" id="revBtn">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="reveal">
+          <div class="sec-label">Contact</div>
+          <h2 class="sec-title">Tell Us About Your Project</h2>
+          <p class="sec-sub" style="margin-bottom:32px;">Fill out the form and we'll be in touch within 24 hours.</p>
+          <div class="ci-list">
+            <div class="ci-item"><div class="ci-ic">📞</div><div><div class="ci-lbl">Phone / WhatsApp</div><div class="ci-val"><a href="tel:+26778753078">+267 78 753 078</a></div></div></div>
+            <div class="ci-item"><div class="ci-ic">📍</div><div><div class="ci-lbl">Location</div><div class="ci-val">Gabane / Gaborone, Botswana</div></div></div>
+            <div class="ci-item"><div class="ci-ic">⏰</div><div><div class="ci-lbl">Response Time</div><div class="ci-val">Within 24 hours</div></div></div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="form-box">
+            <div id="inqSuccess" class="suc" style="display:none"><div class="si">✅</div><h4>Inquiry Sent!</h4><p>We'll be in touch soon.</p></div>
+            <form id="inqForm" onsubmit="submitInquiry(event)">
+              <div class="fg"><label>Project Type</label>
+                <select id="iType">
+                  <option value="website">Website</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile App</option>
+                  <option value="custom-software">Custom Software</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="frow">
+                <div class="fg"><label>Your Name</label><input type="text" id="iName" placeholder="John Doe" required minlength="2" /></div>
+                <div class="fg"><label>WhatsApp / Phone</label><input type="text" id="iPhone" placeholder="+267 7x xxx xxx" /></div>
+              </div>
+              <div class="fg"><label>Project Details</label><textarea id="iFeats" rows="5" placeholder="Describe your project..." required minlength="10"></textarea></div>
+              <div class="fg"><label>Budget (BWP)</label><input type="number" id="iBudget" placeholder="e.g. 5000" required min="0" /></div>
+              <button type="submit" class="btn-sub" id="inqBtn">Send Inquiry →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <div class="soc-strip">
+    <div class="container">
+      <h3>Connect With CodeEl</h3>
+      <div class="soc-links">
+        <a href="https://facebook.com/CodeEl" target="_blank" class="soc-a">📘 Facebook</a>
+        <a href="https://instagram.com/CodeEl" target="_blank" class="soc-a">📸 Instagram</a>
+        <a href="https://tiktok.com/@CodeEl" target="_blank" class="soc-a">🎵 TikTok</a>
+        <a href="https://wa.me/26778753078" target="_blank" class="soc-a wa">💬 WhatsApp</a>
+      </div>
+      <div class="ph-row">📞 <a href="tel:+26778753078">+267 78 753 078</a></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="/logo.png" alt="CodeEl" />
+    <p>&copy; 2026 CodeEl Software Solutions. All rights reserved.</p>
+    <a href="/admin.html" class="owner-link">Owner Dashboard</a>
+  </footer>
+
+  <script>
+    /* NAV */
+    function toggleNav(){ document.getElementById('mobMenu').classList.toggle('open'); }
+    function closeNav(){ document.getElementById('mobMenu').classList.remove('open'); }
+
+    /* SCROLL REVEAL */
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+    },{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    /* STAR PICKER */
+    let selRating=5;
+    const sp=document.getElementById('starPicker');
+    for(let i=1;i<=5;i++){
+      const b=document.createElement('button');
+      b.type='button'; b.className='sp-btn'+(i<=5?' on':''); b.textContent='★'; b.dataset.s=i;
+      b.onclick=()=>{ selRating=i; document.querySelectorAll('.sp-btn').forEach((x,idx)=>x.classList.toggle('on',idx<i)); };
+      sp.appendChild(b);
+    }
+
+    /* LOAD TESTIMONIALS */
+    async function loadTestimonials(){
+      const grid=document.getElementById('testimonialsGrid');
+      try{
+        const res=await fetch('/api/testimonials');
+        const data=await res.json();
+        if(!data.length){ grid.innerHTML='<div class="no-rev">No reviews yet — be the first below!</div>'; return; }
+        grid.innerHTML='<div class="test-grid">'+data.map(t=>`
+          <div class="test-card">
+            <div class="t-stars">${[1,2,3,4,5].map(i=>`<span class="${i<=t.rating?'sf':'se'}">★</span>`).join('')}</div>
+            <p class="t-quote">"${esc(t.message)}"</p>
+            <div class="t-author"><div class="t-name">${esc(t.client_name)}</div><div class="t-role">${esc(t.client_role||'')}</div></div>
+          </div>`).join('')+'</div>';
+      }catch{ grid.innerHTML='<div class="no-rev">Could not load reviews.</div>'; }
+    }
+    loadTestimonials();
+
+    /* SUBMIT REVIEW */
+    async function submitReview(e){
+      e.preventDefault();
+      const btn=document.getElementById('revBtn');
+      btn.disabled=true; btn.textContent='Submitting...';
+      try{
+        await fetch('/api/testimonials',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({clientName:document.getElementById('rName').value,clientRole:document.getElementById('rRole').value,message:document.getElementById('rMsg').value,rating:selRating})});
+        document.getElementById('revForm').style.display='none';
+        document.getElementById('revSuccess').style.display='block';
+        setTimeout(()=>{document.getElementById('revSuccess').style.display='none';document.getElementById('revForm').style.display='block';document.getElementById('revForm').reset();btn.disabled=false;btn.textContent='Submit Review';},6000);
+      }catch{ alert('Failed. Try again.'); btn.disabled=false; btn.textContent='Submit Review'; }
+    }
+
+    /* SUBMIT INQUIRY */
+    async function submitInquiry(e){
+      e.preventDefault();
+      const btn=document.getElementById('inqBtn');
+      btn.disabled=true; btn.textContent='Sending...';
+      try{
+        await fetch('/api/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({projectType:document.getElementById('iType').value,name:document.getElementById('iName').value,phone:document.getElementById('iPhone').value,features:document.getElementById('iFeats').value,budget:parseFloat(document.getElementById('iBudget').value)||0})});
+        document.getElementById('inqForm').style.display='none';
+        document.getElementById('inqSuccess').style.display='block';
+        setTimeout(()=>{document.getElementById('inqSuccess').style.display='none';document.getElementById('inqForm').style.display='block';document.getElementById('inqForm').reset();btn.disabled=false;btn.textContent='Send Inquiry →';},5000);
+      }catch{ alert('Failed. Try again.'); btn.disabled=false; btn.textContent='Send Inquiry →'; }
+    }
+
+    function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  </script>
+</body>
+</html>
